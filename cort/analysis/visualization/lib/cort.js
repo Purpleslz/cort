@@ -81,15 +81,21 @@ var CortVisualisation = {
 
         this.clearHighlight();
         elements = elements || $(this.docId).find(".mention");
-        elements = elements.add(this.getNeighbouringMentions(elements));
+        //elements = elements.add(this.getNeighbouringMentions(elements));
         var that = this;
         elements.each(function() {
             var mentionClass = $(this).attr("class").split(" ")[0];
             $(this).css("background-color", that.chain_to_colour[mentionClass]);
             if ($(this).attr("class").indexOf("gold") === 0){
-                $(this).addClass("goldBorder");
+                //$(this).addClass("goldBorder");
+                //$(this).css("border", "3px solid " + that.chain_to_colour[mentionClass]);
+                $(this).css("border", "3px solid #ffbf00");
+                //$(this).css("background-color", '#ffbf00');
             } else {
-                $(this).addClass("blueBorder");
+                //$(this).addClass("blueBorder");
+                //$(this).css("border", "3px solid " + that.chain_to_colour[mentionClass]);
+                $(this).css("border", "3px solid #00bfff");
+                //$(this).css("background-color", '#00bfff');
             }
         });
         this.scrollTo(elements.first());
@@ -143,10 +149,10 @@ var CortVisualisation = {
             t_ana_bis.id = error.anaphor + "bis";
             $(t_ana_bis).insertAfter("#" + error.anaphor);
             if (error.type === "Decision"){
-                that.jsPlumb.connect({
-                    source: t_ana_bis,
-                    target: t_ant_bis
-                }, jsPlumbSettingsDecisions);
+                //that.jsPlumb.connect({
+                    //source: t_ana_bis,
+                    //target: t_ant_bis
+                //}, jsPlumbSettingsDecisions);
             }
         });
 
@@ -159,11 +165,11 @@ var CortVisualisation = {
             t_ana_bis.id = error.anaphor + "bis";
             $(t_ana_bis).insertAfter("#" + error.anaphor);
             if (error.type !== "Decision"){
-                jsPlumbSettings.overlays[0][1].label = error.type;
-                that.jsPlumb.connect({
-                    source: t_ana_bis,
-                    target: t_ant_bis
-                }, jsPlumbSettings);
+                //jsPlumbSettings.overlays[0][1].label = error.type;
+                //that.jsPlumb.connect({
+                    //source: t_ana_bis,
+                    //target: t_ant_bis
+                //}, jsPlumbSettings);
             }
         });        
     }
@@ -243,19 +249,37 @@ $(function (){
             event.stopPropagation();
             var errorType = $(this).text().split(" ")[0];
             var errCount = $(this).text().split(" ")[1].substr(1).split(")")[0];
-            if (errCount > 0){
+            //if (errCount > 0){
+                //var elements = $();
+                //var errors = cort.errors.filter(function(error){
+                    //if (error.type === errorType && error.antecedent.indexOf(cort.docId.substr(1)) !== -1){
+                        //elements = elements.add($("#" + error.antecedent + ", #" + error.anaphor));
+                        //return true;
+                    //} else {
+                        //return false;
+                    //}
+                //});
+                //cort.highlightElements(elements);
+                //cort.showErrors(errors);
+            //}
+            // modified
+            if (errorType == "Precision"){
                 var elements = $();
-                var errors = cort.errors.filter(function(error){
-                    if (error.type === errorType && error.antecedent.indexOf(cort.docId.substr(1)) !== -1){
-                        elements = elements.add($("#" + error.antecedent + ", #" + error.anaphor));
-                        return true;
-                    } else {
-                        return false;
-                    }
+                $(this).parent().parent().parent().find("div.systemNavi").find("li").each(function(){
+                    elements = elements.add($(cort.docId).find("." + $(this).attr("class").split(" ")[0]));
                 });
+                elements = elements.add(cort.getNeighbouringMentions(elements));
                 cort.highlightElements(elements);
-                cort.showErrors(errors);
             }
+            else{
+                var elements = $();
+                $(this).parent().parent().parent().find("div.goldNavi").find("li").each(function(){
+                    elements = elements.add($(cort.docId).find("." + $(this).attr("class").split(" ")[0]));
+                });
+                elements = elements.add(cort.getNeighbouringMentions(elements));
+                cort.highlightElements(elements);
+            }
+
         }
     });
 

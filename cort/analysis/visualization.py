@@ -43,6 +43,16 @@ class Visualizer:
         self.corpus_name = corpus_name
         self.for_raw_input = for_raw_input
 
+        self.colour_id = 0
+        self.colours_panel = ["#A76CE8", # purple
+                              "#9AE880", # green
+                              "#FFBEAF", # white
+                              "#79B5E8", # blue
+                              "#FFCA60", # orange
+                              "#FFBA93", # pink
+                              "#FF6E69", # red
+                             ]
+
     def run(self):
         documents_html = ""
         documents_navi = "\n\t\t<div id=\"documentsNavi\"><h3>Documents</h3>" \
@@ -259,11 +269,17 @@ class Visualizer:
 
                 if chain_id not in self.chain_to_colour.keys():
                     while True:
-                        r = lambda: randint(170, 255)
-                        colour = '#%02X%02X%02X' % (r(), r(), r())
-                        if colour not in self.colours:
-                            self.colours.append(colour)
-                            break
+                        # r = lambda: randint(170, 255)
+                        # colour = '#%02X%02X%02X' % (r(), r(), r())
+                        colour = self.colours_panel[self.colour_id]
+                        self.colour_id += 1
+                        if self.colour_id == len(self.colours_panel):
+                            self.colour_id = 0
+
+                        # if colour not in self.colours:
+                            # self.colours.append(colour)
+                            # break
+                        break
 
                     self.chain_to_colour[chain_id] = colour
 
@@ -394,9 +410,13 @@ class Visualizer:
                                          "\">" + mention_tokens + "</li>"
                     chains.add(chain_id)
 
+                color_panel = ["",]
+
                 if chain_id not in self.chain_to_colour.keys():
                     while True:
-                        r = lambda: randint(170, 255)
+                        # r = lambda: randint(170, 255)
+                        # modified color
+                        r = lambda: randint(0, 255)
                         colour = '#%02X%02X%02X' % (r(), r(), r())
                         if colour not in self.colours:
                             self.colours.append(colour)
