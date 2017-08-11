@@ -79,13 +79,15 @@ var CortVisualisation = {
     addAllClassInElements: function (elements) {
         "use strict";
         var allClass = $();
+        var docId = this.docId;
         elements.each(function(){
             var mentionClass = $(this).attr("class").split(" ")[0];
-            var docId = this.docId;
             var temp = $(docId).find("." + mentionClass);
             temp.each(function(){
-                allClass.add( $(this).add($(docId + " .navcontainer ." + $(this).attr("class").split(" ")[0])) )
+                allClass = allClass.add( $(this) )
+                //allClass = allClass.add( $(docId + " .navcontainer ." + $(this).attr("class").split(" ")[0]) );
             })
+            //allClass = allClass.add( $(docId).find("." + mentionClass));
         });
 
         return allClass;
@@ -96,6 +98,7 @@ var CortVisualisation = {
 
         this.clearHighlight();
         elements = elements || $(this.docId).find(".mention");
+        //elements = elements;
         //elements = elements.add(this.getNeighbouringMentions(elements));
         var that = this;
         elements.each(function() {
