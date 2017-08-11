@@ -76,6 +76,21 @@ var CortVisualisation = {
         return neighbours;
     },
 
+    addAllClassInElements: function (elements) {
+        "use strict";
+        var allClass = $();
+        elements.each(function(){
+            var mentionClass = $(this).attr("class").split(" ")[0];
+            var docId = this.docId;
+            var temp = $(docId).find("." + mentionClass);
+            temp.each(function(){
+                allClass.add( $(this).add($(docId + " .navcontainer ." + $(this).attr("class").split(" ")[0])) )
+            })
+        });
+
+        return allClass;
+    },
+
     highlightElements: function (elements) {
         "use strict";
 
@@ -187,19 +202,20 @@ $(function (){
             var mentionClass = $(this).attr("class").split(" ")[0];
             var elements = $(cort.docId).find("." + mentionClass);
             elements = elements.add(cort.getNeighbouringMentions(elements));
-            var errors = [];
-            cort.errors.forEach(function(error){
-                if (elements.index($("#" + error.antecedent)) !== -1 &&
-                    elements.index($("#" + error.anaphor)) !== -1){
-                    errors.push(error);
-                } else if (elements.index($("#" + error.antecedent)) !== -1){
-                    elements = elements.add($("#" + error.anaphor));
-                    errors.push(error);
-                } else if (elements.index($("#" + error.anaphor)) !== -1){
-                    elements = elements.add($("#" + error.antecedent));
-                    errors.push(error);
-                }
-            });
+            elements = elements.add(cort.addAllClassInElements(elements));
+            //var errors = [];
+            //cort.errors.forEach(function(error){
+                //if (elements.index($("#" + error.antecedent)) !== -1 &&
+                    //elements.index($("#" + error.anaphor)) !== -1){
+                    //errors.push(error);
+                //} else if (elements.index($("#" + error.antecedent)) !== -1){
+                    //elements = elements.add($("#" + error.anaphor));
+                    //errors.push(error);
+                //} else if (elements.index($("#" + error.anaphor)) !== -1){
+                    //elements = elements.add($("#" + error.antecedent));
+                    //errors.push(error);
+                //}
+            //});
             cort.highlightElements(elements);
             if (errors.length > 0) {
                 cort.showErrors(errors);
@@ -223,23 +239,23 @@ $(function (){
     // By category
     $(".navcontainer .errorsNavi ul li").on({
         click: function(event) {
-            event.stopPropagation();
-            var errorType = $(this).parent().parent().find("h4").text().split(" ")[0];
-            var category = $(this).text().split(" ").slice(0, -1).join(" ").slice(0,-1);
-            var elements = $();
-            var errors = cort.errors.filter(function(error){
-                if (error.type === errorType &&
-                    error.antecedent.indexOf(cort.docId.substr(1)) !== -1 &&
-                    error.category === category){
-                    elements = elements.add($("#" + error.antecedent + ", #" + error.anaphor));
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-
-            cort.highlightElements(elements);
-            cort.showErrors(errors);
+            //event.stopPropagation();
+            //var errorType = $(this).parent().parent().find("h4").text().split(" ")[0];
+            //var category = $(this).text().split(" ").slice(0, -1).join(" ").slice(0,-1);
+            //var elements = $();
+            //var errors = cort.errors.filter(function(error){
+                //if (error.type === errorType &&
+                    //error.antecedent.indexOf(cort.docId.substr(1)) !== -1 &&
+                    //error.category === category){
+                    //elements = elements.add($("#" + error.antecedent + ", #" + error.anaphor));
+                    //return true;
+                //} else {
+                    //return false;
+                //}
+            //});
+//
+            //cort.highlightElements(elements);
+            //cort.showErrors(errors);
         }
     });
 
@@ -269,6 +285,7 @@ $(function (){
                     elements = elements.add($(cort.docId).find("." + $(this).attr("class").split(" ")[0]));
                 });
                 elements = elements.add(cort.getNeighbouringMentions(elements));
+                elements = elements.add(cort.addAllClassInElements(elements));
                 cort.highlightElements(elements);
             }
             else{
@@ -277,6 +294,7 @@ $(function (){
                     elements = elements.add($(cort.docId).find("." + $(this).attr("class").split(" ")[0]));
                 });
                 elements = elements.add(cort.getNeighbouringMentions(elements));
+                elements = elements.add(cort.addAllClassInElements(elements));
                 cort.highlightElements(elements);
             }
 
@@ -286,21 +304,21 @@ $(function (){
     // All errors
     $(".navcontainer .errorsNavi h3").on({
         click: function(event) {
-            event.stopPropagation();
-            var errCount = $(this).text().split(" ")[1].substr(1).split(")")[0];
-            if (errCount > 0){
-                var elements = $();
-                var errors = cort.errors.filter(function(error){
-                    if (error.antecedent.indexOf(cort.docId.substr(1)) !== -1){
-                        elements = elements.add($("#" + error.antecedent + ", #" + error.anaphor));
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-                cort.highlightElements(elements);
-                cort.showErrors(errors);
-            }
+            //event.stopPropagation();
+            //var errCount = $(this).text().split(" ")[1].substr(1).split(")")[0];
+            //if (errCount > 0){
+                //var elements = $();
+                //var errors = cort.errors.filter(function(error){
+                    //if (error.antecedent.indexOf(cort.docId.substr(1)) !== -1){
+                        //elements = elements.add($("#" + error.antecedent + ", #" + error.anaphor));
+                        //return true;
+                    //} else {
+                        //return false;
+                    //}
+                //});
+                //cort.highlightElements(elements);
+                //cort.showErrors(errors);
+            //}
         }
     });
 

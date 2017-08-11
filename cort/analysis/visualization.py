@@ -58,7 +58,7 @@ class Visualizer:
         documents_navi = "\n\t\t<div id=\"documentsNavi\"><h3>Documents</h3>" \
                          "\n\t\t\t<ul>"
         errors_source = "\n\t\t<script>\n" \
-                        "\t\t\terrors = [ "
+                        "\t\t\terrors = [  "
 
         system_corpus = self.structured_coreference_analysis.corpora[
             self.corpus_name]
